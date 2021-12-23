@@ -6,12 +6,15 @@ import {
   Scene,
   Vector3,
   VirtualJoysticksCamera,
+  FreeCameraVirtualJoystickInput,
   SceneLoader,
   // Camera,
   // Light,
   // Animation,
 } from "@babylonjs/core";
 // import "@babylonjs/loaders/OBJ";
+
+class CustomJoystickInput extends FreeCameraVirtualJoystickInput {}
 
 class App {
   // Initialization
@@ -38,9 +41,14 @@ class App {
       scene
     );
     camera.checkCollisions = true;
-    // camera.speed = 0.2;
-    // camera.angularSensibility = 0.2;
+    camera.applyGravity = true;
     camera.attachControl(canvas, true);
+    const joystickInput = camera.inputs.attached
+      .virtualJoystick as FreeCameraVirtualJoystickInput;
+    joystickInput.getLeftJoystick().limitToContainer = true;
+    joystickInput.getLeftJoystick().setJoystickSensibility(0.035);
+    joystickInput.getRightJoystick().limitToContainer = true;
+    joystickInput.getRightJoystick().setJoystickSensibility(0.035);
 
     SceneLoader.Append("./assets/", "building.babylon", scene, (scene) => {
       scene.activeCamera = camera;
